@@ -16,7 +16,7 @@ public class Display extends CommonCommand {
 		String[] parm = str.split(" ");
 		
 		if(parm[0].equalsIgnoreCase("cross"))
-			cross(parm[3], parm[4], parm[6]);
+			cross(str);
 		else if(parm[0].equalsIgnoreCase("solution"))
 			solution(parm[1]);
 		else if(parm.length == 1)
@@ -27,8 +27,24 @@ public class Display extends CommonCommand {
 
 	}
 	
-	private void cross(String by, String index, String name){
-				
+	private void cross(String arg){
+		String[] parm = arg.split(" ");
+		if(parm.length != 7){
+			controller.setMassage("Invalid Command");
+			return;
+		}
+		String by = parm[3];
+		int index = 0;
+		try{
+			index = Integer.parseInt(parm[4]);
+		}
+		catch(NumberFormatException e){
+			controller.setMassage("Invalid index");
+			return;
+		}
+		String name = parm[6];
+		
+		controller.getModel().crossBy(by, index, name);
 	}
 	
 	private void solution(String name){
@@ -43,6 +59,7 @@ public class Display extends CommonCommand {
 		Maze3d maze = controller.getModel().getMazeByName(name);
 		if(maze == null)
 			controller.setMassage("Not exist maze by name: " + name);
-		controller.setMassage(maze.toString());
+		else
+			controller.setMassage(maze.toString());
 	}
 }

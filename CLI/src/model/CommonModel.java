@@ -17,10 +17,6 @@ public abstract class CommonModel implements Model {
 		this.controller = control;
 	}
 	
-	public void addSolution(String name, Solution<Position> solution){
-		hashSolution.put(name, solution);
-	}
-	
 	public Solution<Position> getSolution(String name){
 		return hashSolution.get(name);
 	}
@@ -30,5 +26,17 @@ public abstract class CommonModel implements Model {
 	
 	@Override
 	public abstract Maze3d getMazeByName(String name);
+	
+	@Override
+	public abstract void createSolution(String name);
+	
+	@Override
+	public abstract void crossBy(String by, int index, String name);
+	
+	@Override
+	public abstract void saveMaze(String arg);
+	
+	@Override
+	public abstract void loadMaze(String arg);
 
 }

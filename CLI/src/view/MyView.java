@@ -13,8 +13,7 @@ public class MyView extends CommonView {
 
 	@Override
 	public void start() throws IOException {
-		Thread t=new Thread(cli);
-		t.start();
+		cli.start();
 	}
 
 	@Override

@@ -14,6 +14,12 @@ public abstract class CommonView implements View {
 	}
 	
 	@Override
+	public void exit() {
+		cli.setRunning(false);
+		
+	}
+	
+	@Override
 	public abstract void start()  throws IOException;
 
 	@Override

@@ -22,7 +22,7 @@ public class CLI {
 	
 	public void setRunning(boolean running){ this.running = running; }
 	
-	public void start() throws IOException{
+	public void start(){
 		
 		new Thread(new Runnable() {
 			
@@ -32,21 +32,25 @@ public class CLI {
 				Command com = null;
 				
 				while(running){
-					try{
-						str = in.readLine();
+						try {
+							str = in.readLine();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						String[] command = str.split(" ", 2);
 						com = hash.get(command[0]);
 						if(com != null)
-							com.doCommand(command[1]);
+							if(command.length == 1)
+								com.doCommand("");
+							else	
+								com.doCommand(command[1]);
 						else
-							out.write("Error! Command not exist");
-					}
-					catch (IOException e){
-						throw e;
-					}
+							System.out.println("Error! Command not exist");
+
 				}
 			}
-		});
+		}).start();
 		
 		
 	}
