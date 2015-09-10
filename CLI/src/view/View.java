@@ -1,10 +1,14 @@
 package view;
+import java.util.HashMap;
 
-import java.io.IOException;
+import controller.Command;
+import controller.Controller;
 
 
 public interface View {
-	void start() throws IOException;
+	void start();
 	void displayMassage(String message);
 	void exit();
+	void setCommands(HashMap<String,Command> hashCommand);
+	void setController(Controller controller);
 }

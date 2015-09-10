@@ -13,8 +13,8 @@ public abstract class CommonModel implements Model {
 	HashMap<String, Maze3d> hashMaze = new HashMap<String,Maze3d>();
 	HashMap<String, Solution<Position>> hashSolution = new HashMap<String, Solution<Position>>();
 	
-	public CommonModel(Controller control){
-		this.controller = control;
+	public void setController(Controller controller){
+		this.controller = controller;
 	}
 	
 	public Solution<Position> getSolution(String name){

@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import algorithms.IO.MyCompressorOutputStream;
 import algorithms.IO.MyDecompressorInputStream;
 import algorithms.demo.MazeDomain;
@@ -20,13 +19,9 @@ import algorithms.search.MazeAirDistance;
 import algorithms.search.MazeManhattanDistance;
 import algorithms.search.Solution;
 import algorithms.search.State;
-import controller.Controller;
+
 
 public class MyModel extends CommonModel {
-
-	public MyModel(Controller control) {
-		super(control);
-	}
 
 	@Override
 	public void generate(String name, int x, int y, int z) {
@@ -203,7 +198,7 @@ public class MyModel extends CommonModel {
 		InputStream in = null;
 		try {
 			in = new MyDecompressorInputStream(new FileInputStream(parm[2] + ".maz"));
-			byte b[] = new byte[2048]; //change size
+			byte b[] = new byte[2048];
 			in.read(b);
 			loaded = new Maze3d(b);
 		} catch (FileNotFoundException e) {
@@ -240,9 +235,15 @@ public class MyModel extends CommonModel {
 
 	@Override
 	public void mazeSizeFile(String name) {
-		File maze = new File(name + ".maz");
 		
-		controller.setMassage("Maze file " + name + " size is: " + maze.length());
-	}	
-
+		try{
+			File maze = new File(name + ".maz");
+			controller.setMassage("Maze file " + name + " size is: " + maze.length());
+		}
+		catch (NullPointerException e){
+			controller.setMassage("Not exist " + name + " file");
+		}
+		
+		
+	}
 }

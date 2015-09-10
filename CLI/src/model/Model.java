@@ -3,6 +3,7 @@ package model;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
+import controller.Controller;
 
 public interface Model {
 	
@@ -15,4 +16,5 @@ public interface Model {
 	void loadMaze(String arg);
 	void mazeSizeMemory(String name);
 	void mazeSizeFile(String name);
+	void setController(Controller controller);
 }

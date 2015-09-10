@@ -1,17 +1,25 @@
 package view;
 
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.util.HashMap;
+
+import controller.Command;
 import controller.Controller;
 
 public abstract class CommonView implements View {
 
 	Controller controller;
 	CLI cli;
-	
-	public CommonView(Controller control, CLI cli){
-		this.controller = control;
-		this.cli = cli;
+	HashMap<String,Command> hashCommand;
+	BufferedReader in;
+	PrintWriter out;
+
+	public void setController(Controller controller){
+		this.controller = controller;
 	}
+	
+	
 	
 	@Override
 	public void exit() {
@@ -20,9 +28,13 @@ public abstract class CommonView implements View {
 	}
 	
 	@Override
-	public abstract void start()  throws IOException;
+	public abstract void start();
 
 	@Override
 	public abstract void displayMassage(String message);
-
+	
+	@Override
+	public void setCommands(HashMap<String,Command> hashCommand){
+		this.hashCommand = hashCommand;
+	}
 }

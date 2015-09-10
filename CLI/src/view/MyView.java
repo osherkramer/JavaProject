@@ -1,18 +1,20 @@
 package view;
 
 
-import java.io.IOException;
-import controller.Controller;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
 
 public class MyView extends CommonView {
 	
 	
-	public MyView(Controller control, CLI cli){
-		super(control, cli);
+	public MyView(BufferedReader in, PrintWriter out){
+		this.in = in;
+		this.out = out;		
 	}
 
 	@Override
-	public void start() throws IOException {
+	public void start(){
+		cli = new CLI(in,out, hashCommand);
 		cli.start();
 	}
 
