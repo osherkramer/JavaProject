@@ -10,8 +10,10 @@ import controller.Controller;
 import controller.Dir;
 import controller.Display;
 import controller.Exit;
+import controller.FileSize;
 import controller.Generate3dMaze;
 import controller.LoadMaze;
+import controller.MazeSize;
 import controller.MyController;
 import controller.SaveMaze;
 import controller.Solve;
@@ -32,6 +34,8 @@ public class Run {
 		hash.put("solve", new Solve(controller));
 		hash.put("save", new SaveMaze(controller));
 		hash.put("load", new LoadMaze(controller));
+		hash.put("maze", new MazeSize(controller));
+		hash.put("file", new FileSize(controller));
 		hash.put("exit", new Exit(controller));
 		
 		

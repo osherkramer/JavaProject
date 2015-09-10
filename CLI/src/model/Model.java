@@ -13,4 +13,6 @@ public interface Model {
 	void crossBy(String by, int index, String name);
 	void saveMaze(String arg);
 	void loadMaze(String arg);
+	void mazeSizeMemory(String name);
+	void mazeSizeFile(String name);
 }

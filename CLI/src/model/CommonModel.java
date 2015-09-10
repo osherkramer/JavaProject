@@ -38,5 +38,10 @@ public abstract class CommonModel implements Model {
 	
 	@Override
 	public abstract void loadMaze(String arg);
+	
+	@Override
+	public abstract void mazeSizeMemory(String name);
 
+	@Override
+	public abstract void mazeSizeFile(String name);
 }

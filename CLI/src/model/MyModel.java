@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -223,6 +224,25 @@ public class MyModel extends CommonModel {
 		hashMaze.put(parm[1], loaded);
 		controller.setMassage("File " + parm[2] + " load");
 		
+	}
+
+	@Override
+	public void mazeSizeMemory(String name) {
+		Maze3d maze = hashMaze.get(name);
+		if(maze == null){
+			controller.setMassage("Maze " + name + " not exist");
+			return;
+		}
+		
+		controller.setMassage("Maze " + name + " size in memory: " + maze.toByteArray().length);
+		
+	}
+
+	@Override
+	public void mazeSizeFile(String name) {
+		File maze = new File(name + ".maz");
+		
+		controller.setMassage("Maze file " + name + " size is: " + maze.length());
 	}	
 
 }
