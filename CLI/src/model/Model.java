@@ -17,4 +17,6 @@ public interface Model {
 	void mazeSizeMemory(String name);
 	void mazeSizeFile(String name);
 	void setController(Controller controller);
+	
+	void exit();
 }

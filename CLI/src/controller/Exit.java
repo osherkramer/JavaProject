@@ -8,6 +8,7 @@ public class Exit extends CommonCommand {
 
 	@Override
 	public void doCommand(String str) {
+		controller.getModel().exit(); //////////////
 		controller.getView().exit();
 	}
 

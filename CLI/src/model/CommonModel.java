@@ -44,4 +44,7 @@ public abstract class CommonModel implements Model {
 
 	@Override
 	public abstract void mazeSizeFile(String name);
+	
+	@Override
+	public abstract void exit();
 }

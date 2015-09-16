@@ -7,6 +7,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import algorithms.IO.MyCompressorOutputStream;
 import algorithms.IO.MyDecompressorInputStream;
 import algorithms.demo.MazeDomain;
@@ -23,18 +27,24 @@ import algorithms.search.State;
 
 public class MyModel extends CommonModel {
 
+	ExecutorService threadpool;
+	
+	public MyModel() {
+		threadpool = Executors.newFixedThreadPool(10);  //////////////////
+	}
+	
 	@Override
 	public void generate(String name, int x, int y, int z) {
-		new Thread(new Runnable() {
+		threadpool.execute(new Runnable() {
 			
 			@Override
 			public void run() {
 				Maze3d maze = new MyMaze3dGenerator().generate(x, y, z);
 				hashMaze.put(name,maze);
+				controller.setMassage("maze " + name + " is ready");
+				
 			}
-		}).start();
-		
-		controller.setMassage("maze " + name + " is ready");
+		});		
 	}
 	
 	public Maze3d getMazeByName(String name){
@@ -50,12 +60,11 @@ public class MyModel extends CommonModel {
 			return;
 		}
 		
-		new Thread(new Runnable(){
-
+		/////////////////////////////////////////////////////////////
+		threadpool.execute(new Runnable() {
+			
 			@Override
-			public void run()
-			{
-				
+			public void run() {
 				if(parm[1].equalsIgnoreCase("bfs")){
 					Maze3d maze = controller.getModel().getMazeByName(parm[0]);
 					BFS<Position> bfs = new BFS<Position>();
@@ -80,10 +89,8 @@ public class MyModel extends CommonModel {
 				}
 				else
 					controller.setMassage("Invalid algorithm");
-			}		
-		}).start();
-		
-		
+			}
+		});
 	}
 
 	@Override
@@ -245,5 +252,16 @@ public class MyModel extends CommonModel {
 		}
 		
 		
+	}
+
+	@Override///////////////////////////////
+	public void exit(){
+		threadpool.shutdown();
+		boolean allTasksCompleted=false;
+		try {
+			while(!(allTasksCompleted=threadpool.awaitTermination(10, TimeUnit.SECONDS)));
+		} catch (InterruptedException e) {
+			controller.setMassage(e.getMessage());
+		}		
 	}
 }
