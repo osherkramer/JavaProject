@@ -1,11 +1,14 @@
 package model;
 
 import java.util.HashMap;
-
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 import controller.Controller;
+/**
+ * CommonModel implements Model interface
+ * abstract class of the model
+ */
 
 public abstract class CommonModel implements Model {
 	
@@ -13,10 +16,12 @@ public abstract class CommonModel implements Model {
 	HashMap<String, Maze3d> hashMaze = new HashMap<String,Maze3d>();
 	HashMap<String, Solution<Position>> hashSolution = new HashMap<String, Solution<Position>>();
 	
+	@Override
 	public void setController(Controller controller){
 		this.controller = controller;
 	}
 	
+	@Override	
 	public Solution<Position> getSolution(String name){
 		return hashSolution.get(name);
 	}
@@ -25,7 +30,7 @@ public abstract class CommonModel implements Model {
 	public abstract void generate(String name, int x, int y, int z);
 	
 	@Override
-	public abstract Maze3d getMazeByName(String name);
+	public abstract void getMazeByName(String name);
 	
 	@Override
 	public abstract void createSolution(String name);

@@ -7,10 +7,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
 import algorithms.IO.MyCompressorOutputStream;
 import algorithms.IO.MyDecompressorInputStream;
 import algorithms.demo.MazeDomain;
@@ -24,13 +24,23 @@ import algorithms.search.MazeManhattanDistance;
 import algorithms.search.Solution;
 import algorithms.search.State;
 
+/**
+ * MyModel class extends CommonModel
+ * manage the size of the model
+ */
+
 
 public class MyModel extends CommonModel {
 
 	ExecutorService threadpool;
+	HashMap<Maze3d,String> mazeFile;
 	
+	/**
+	 * Default Constructor of MyModel
+	 */
 	public MyModel() {
 		threadpool = Executors.newFixedThreadPool(10);  //////////////////
+		mazeFile = new HashMap<Maze3d,String>();
 	}
 	
 	@Override
@@ -41,14 +51,19 @@ public class MyModel extends CommonModel {
 			public void run() {
 				Maze3d maze = new MyMaze3dGenerator().generate(x, y, z);
 				hashMaze.put(name,maze);
-				controller.setMassage("maze " + name + " is ready");
+				controller.setMessage("maze " + name + " is ready");
 				
 			}
 		});		
 	}
 	
-	public Maze3d getMazeByName(String name){
-		return hashMaze.get(name);
+	@Override
+	public void getMazeByName(String name){
+		Maze3d maze = hashMaze.get(name);
+		if(maze == null)
+			controller.setMessage("Not exist maze by name: " + name);
+		else
+			controller.setMessage(maze.toString()); 
 	}
 
 	@Override
@@ -56,7 +71,7 @@ public class MyModel extends CommonModel {
 		String[] parm=name.split(" ");
 		
 		if(parm.length != 2){
-			controller.setMassage("Invalid Command");
+			controller.setMessage("Invalid Command");
 			return;
 		}
 		
@@ -66,29 +81,29 @@ public class MyModel extends CommonModel {
 			@Override
 			public void run() {
 				if(parm[1].equalsIgnoreCase("bfs")){
-					Maze3d maze = controller.getModel().getMazeByName(parm[0]);
+					Maze3d maze = hashMaze.get(parm[0]); ////////
 					BFS<Position> bfs = new BFS<Position>();
 					Solution<Position> bfsSolution = bfs.search(new MazeDomain(maze));
 					hashSolution.put(parm[0], bfsSolution);
-					controller.setMassage("Solution for " + parm[0] + " is ready");
+					controller.setMessage("Solution for " + parm[0] + " is ready");
 				}
 				else if(parm[1].equalsIgnoreCase("ManhattanDistance")){
-					Maze3d maze = controller.getModel().getMazeByName(parm[0]);
+					Maze3d maze = hashMaze.get(parm[0]);/////////////
 					AStar<Position> astarManhattanDistance = new AStar<Position>(new MazeManhattanDistance(new State<Position>(maze.getGoalPosition())));
 					Solution<Position> astarManhattan = astarManhattanDistance.search(new MazeDomain(maze));
 					hashSolution.put(parm[0], astarManhattan);
-					controller.setMassage("Solution for " + parm[0] + " is ready");
+					controller.setMessage("Solution for " + parm[0] + " is ready");
 					
 				}
 				else if(parm[1].equalsIgnoreCase("AirDistance")){
-					Maze3d maze = controller.getModel().getMazeByName(parm[0]);
+					Maze3d maze = hashMaze.get(parm[0]);/////////////////////
 					AStar<Position> astarAirDistance = new AStar<Position>(new MazeAirDistance(new State<Position>(maze.getGoalPosition())));
 					Solution<Position> astarAir = astarAirDistance.search(new MazeDomain(maze));
 					hashSolution.put(parm[0], astarAir);
-					controller.setMassage("Solution for " + parm[0] + " is ready");
+					controller.setMessage("Solution for " + parm[0] + " is ready");
 				}
 				else
-					controller.setMassage("Invalid algorithm");
+					controller.setMessage("Invalid algorithm");
 			}
 		});
 	}
@@ -100,7 +115,7 @@ public class MyModel extends CommonModel {
 		String strMaze ="";
 		int[][] maze2d = null;
 		if(maze == null){
-			controller.setMassage("Maze not exist");
+			controller.setMessage("Maze not exist");
 			return;
 		}
 		
@@ -127,12 +142,12 @@ public class MyModel extends CommonModel {
 				maze2d = maze.getCrossSectionByZ(index);
 				break;
 			default:
-				controller.setMassage("Invalid cross section");
+				controller.setMessage("Invalid cross section");
 				return;
 			}
 		}
 		catch(IndexOutOfBoundsException e){
-			controller.setMassage("Invalid index");
+			controller.setMessage("Invalid index");
 			return;
 		}
 		
@@ -144,7 +159,7 @@ public class MyModel extends CommonModel {
 			strMaze += '\n';
 		}
 		
-		controller.setMassage(strMaze);
+		controller.setMessage(strMaze);
 		
 				
 		
@@ -155,13 +170,13 @@ public class MyModel extends CommonModel {
 	public void saveMaze(String arg) {
 		String[] parm = arg.split(" ");
 		if(parm.length != 3){
-			controller.setMassage("Invalid Command");
+			controller.setMessage("Invalid Command");
 			return;
 		}
 		
 		Maze3d maze = hashMaze.get(parm[1]);
 		if(maze == null){
-			controller.setMassage("Maze " + parm[1] + " not exist");
+			controller.setMessage("Maze " + parm[1] + " not exist");
 			return;
 		}
 		
@@ -169,27 +184,29 @@ public class MyModel extends CommonModel {
 		try {
 			out = new MyCompressorOutputStream(new FileOutputStream(parm[2] + ".maz"));
 			out.write(maze.toByteArray());	
+			mazeFile.put(maze, parm[2] + ".maz");
 		} catch (FileNotFoundException e) {
-			controller.setMassage(e.getMessage());
+			controller.setMessage(e.getMessage());
 			return;
 		} catch (IOException e) {
-			controller.setMassage(e.getMessage());
+			controller.setMessage(e.getMessage());
 			return;
 		}
 		finally{
 			try {
 				out.flush();
 			} catch (IOException e) {
-				controller.setMassage(e.getMessage());
+				controller.setMessage(e.getMessage());
 			}
 			try {
 				out.close();
 			} catch (IOException e) {
-				controller.setMassage(e.getMessage());
+				controller.setMessage(e.getMessage());
 			}
 		}
 		
-		controller.setMassage("File " + parm[2] + " save");
+		
+		controller.setMessage("File " + parm[2] + " save");
 		
 	}
 
@@ -198,57 +215,71 @@ public class MyModel extends CommonModel {
 		String[] parm = arg.split(" ");
 		Maze3d loaded = null;
 		if(parm.length != 3){
-			controller.setMassage("Invalid Command");
+			controller.setMessage("Invalid Command");
 			return;
 		}
-		
-		InputStream in = null;
+			
+		InputStream in=null;
 		try {
 			in = new MyDecompressorInputStream(new FileInputStream(parm[2] + ".maz"));
-			byte b[] = new byte[2048];
+			byte b[] = new byte[4096];
 			in.read(b);
 			loaded = new Maze3d(b);
 		} catch (FileNotFoundException e) {
-			controller.setMassage(e.getMessage());
+			controller.setMessage(e.getMessage());
 			return;
 		} catch (IOException e) {
-			controller.setMassage(e.getMessage());
+			controller.setMessage(e.getMessage());
 			return;
 		}
-		finally{
+		catch(NullPointerException e)
+		{
+			controller.setMessage(e.getMessage());
+			return;
+		}
+		finally
+		{
 			try {
 				in.close();
-			} catch (IOException e) {
-				controller.setMassage(e.getMessage());
+			} catch (IOException e) 
+			{
+				controller.setMessage("Maze "+ parm[1]+" was unsuccessfully");
 			}
 		}
-		
+			
 		hashMaze.put(parm[1], loaded);
-		controller.setMassage("File " + parm[2] + " load");
-		
+		controller.setMessage("Maze " + parm[2] + " loaded successfully");
 	}
-
+	
 	@Override
 	public void mazeSizeMemory(String name) {
 		Maze3d maze = hashMaze.get(name);
 		if(maze == null){
-			controller.setMassage("Maze " + name + " not exist");
+			controller.setMessage("Maze " + name + " not exist");
 			return;
 		}
 		
-		controller.setMassage("Maze " + name + " size in memory: " + maze.toByteArray().length);
+		int size = 4*(maze.getX()*maze.getY()*maze.getZ() + 3 + 3 + 3);
+		
+		controller.setMessage("Maze " + name + " size in memory: " + size);
 		
 	}
 
+	//////////////////////////////////////////////////
 	@Override
-	public void mazeSizeFile(String name) {
+	public void mazeSizeFile(String str) {
 		
 		try{
-			File maze = new File(name + ".maz");
-			controller.setMassage("Maze file " + name + " size is: " + maze.length());
+			String fielPath = mazeFile.get(hashMaze.get(str));
+			if(fielPath == null){
+				controller.setMessage("Maze " + str + " not exist in any file");
+				return;
+			}
+			File maze = new File(fielPath);
+			controller.setMessage("Maze file " + str + " size is: " + maze.length());
 		}
 		catch (NullPointerException e){
-			controller.setMassage("Not exist " + name + " file");
+			controller.setMessage("Not exist " + str + " file");
 		}
 		
 		
@@ -257,11 +288,12 @@ public class MyModel extends CommonModel {
 	@Override///////////////////////////////
 	public void exit(){
 		threadpool.shutdown();
-		boolean allTasksCompleted=false;
 		try {
-			while(!(allTasksCompleted=threadpool.awaitTermination(10, TimeUnit.SECONDS)));
+			while(!(threadpool.awaitTermination(10, TimeUnit.SECONDS)));
 		} catch (InterruptedException e) {
-			controller.setMassage(e.getMessage());
-		}		
+			controller.setMessage(e.getMessage());
+		}	
+		
+		
 	}
 }

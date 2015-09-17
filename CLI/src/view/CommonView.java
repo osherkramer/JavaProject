@@ -3,9 +3,13 @@ package view;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.HashMap;
-
 import controller.Command;
 import controller.Controller;
+
+/**
+ * CommonView - implements View
+ * abstract class of the view size
+ */
 
 public abstract class CommonView implements View {
 
@@ -15,11 +19,13 @@ public abstract class CommonView implements View {
 	BufferedReader in;
 	PrintWriter out;
 
+	/*
+	 * set the controller that work with the view
+	 *
+	 */
 	public void setController(Controller controller){
 		this.controller = controller;
 	}
-	
-	
 	
 	@Override
 	public void exit() {
@@ -31,7 +37,7 @@ public abstract class CommonView implements View {
 	public abstract void start();
 
 	@Override
-	public abstract void displayMassage(String message);
+	public abstract void displayMessage(String message);
 	
 	@Override
 	public void setCommands(HashMap<String,Command> hashCommand){

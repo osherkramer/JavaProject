@@ -2,8 +2,17 @@ package controller;
 
 import java.io.File;
 
+/**
+ * Dir class - extends the CommonComand
+ * manage the dir command that display list of files in folder.
+ */
+
 public class Dir extends CommonCommand{
 	
+	/**
+	 * Dir constructor
+	 * @param controller - get the controller to work with him
+	 */
 	public Dir(Controller controller) {
 		super(controller);
 	}
@@ -18,10 +27,10 @@ public class Dir extends CommonCommand{
 			for(int i = 0; i <string.length; i++)
 				list += string[i] + '\n';
 			
-			controller.setMassage(list);
+			controller.setMessage(list);
 		}
 		catch (NullPointerException e){
-			controller.setMassage("Invalid path");
+			controller.setMessage("Invalid path");
 		}
 		
 	}

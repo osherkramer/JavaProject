@@ -1,12 +1,19 @@
 package controller;
 
-import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 
+/**
+ * Display class - extends the CommonComand
+ * manage the display commands, ask from the model to get the object to display.
+ */
 
 public class Display extends CommonCommand {
 
+	/**
+	 * Display constructor
+	 * @param controller - set the controller to work with him
+	 */
 	public Display(Controller controller) {
 		super(controller);
 	}
@@ -22,15 +29,19 @@ public class Display extends CommonCommand {
 		else if(parm.length == 1)
 			defaultDisplay(parm[0]);
 		else
-			controller.setMassage("Invalid Command");
+			controller.setMessage("Invalid Command");
 			
 
 	}
 	
+	/**
+	 * cross by section - ask the model for the cross
+	 * @param arg - get the parameters of cross
+	 */
 	private void cross(String arg){
 		String[] parm = arg.split(" ");
 		if(parm.length != 7){
-			controller.setMassage("Invalid Command");
+			controller.setMessage("Invalid Command");
 			return;
 		}
 		String by = parm[3];
@@ -39,7 +50,7 @@ public class Display extends CommonCommand {
 			index = Integer.parseInt(parm[4]);
 		}
 		catch(NumberFormatException e){
-			controller.setMassage("Invalid index");
+			controller.setMessage("Invalid index");
 			return;
 		}
 		String name = parm[6];
@@ -47,19 +58,24 @@ public class Display extends CommonCommand {
 		controller.getModel().crossBy(by, index, name);
 	}
 	
+	/**
+	 * solution - ask the model for the solution of maze
+	 * @param arg - get the name of the maze
+	 */
 	private void solution(String name){
 		Solution<Position>	solution = controller.getModel().getSolution(name);
 		if(solution == null)
-			controller.setMassage("Not exist solution for " + name + " maze");
+			controller.setMessage("Not exist solution for " + name + " maze");
 		else
-			controller.setMassage(solution.toString());
+			controller.setMessage(solution.toString());
 	}
 	
+	
+	/**
+	 * ask from the model the maze with specific name
+	 * @param name - maze name
+	 */
 	private void defaultDisplay(String name){
-		Maze3d maze = controller.getModel().getMazeByName(name);
-		if(maze == null)
-			controller.setMassage("Not exist maze by name: " + name);
-		else
-			controller.setMassage(maze.toString());
+		controller.getModel().getMazeByName(name);
 	}
 }

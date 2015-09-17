@@ -7,12 +7,22 @@ import java.util.HashMap;
 
 import controller.Command;
 
+/**
+ * CLI Class - manage the Command Line Interface for the client
+ */
+
 public class CLI {
 	BufferedReader in;
 	PrintWriter out;
 	HashMap<String,Command> hash;
 	boolean running;
 	
+	/**
+	 * CLI Constructor - initialize the CLI object
+	 * @param in - get BufferedReader
+	 * @param out - get PrintWriter
+	 * @param hash - get HashMap that mapped between String to Command
+	 */
 	public CLI(BufferedReader in, PrintWriter out, HashMap<String,Command> hash){
 		this.in = in;
 		this.out = out;
@@ -20,8 +30,15 @@ public class CLI {
 		this.running = true;
 	}
 	
+	/**
+	 * Stop the running of the main thread that run the CLI
+	 * @param running - get false for stop the CLI
+	 */
 	public void setRunning(boolean running){ this.running = running; }
 	
+	/**
+	 * Start the thread that manage the cli and running it
+	 */
 	public void start(){
 		
 		new Thread(new Runnable() {

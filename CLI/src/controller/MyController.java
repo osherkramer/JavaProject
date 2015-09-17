@@ -1,12 +1,24 @@
 package controller;
 
 import java.util.HashMap;
-
 import model.Model;
 import view.View;
 
+/**
+ * MyController class extends CommonController
+ * manage the side of the controller
+ */
+
 public class MyController extends CommonController {
 	HashMap<String,Command> hash;
+	
+	/**
+	 * MyController constructor - get Model and View
+	 * initialize the model and view in the CommonController
+	 * create the HashMap from String to Command
+	 * @param model - get object from type Model
+	 * @param view - get object from type View
+	 */
 	
 	public MyController(Model model, View view) {
 		super(model, view);
@@ -26,8 +38,8 @@ public class MyController extends CommonController {
 	}
 
 	@Override
-	public void setMassage(String message) {
-		this.view.displayMassage(message);
+	public void setMessage(String message) {
+		this.view.displayMessage(message);
 
 	}
 
