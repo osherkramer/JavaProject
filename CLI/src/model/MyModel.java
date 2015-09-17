@@ -221,7 +221,7 @@ public class MyModel extends CommonModel {
 			
 		InputStream in=null;
 		try {
-			in = new MyDecompressorInputStream(new FileInputStream(parm[2] + ".maz"));
+			in = new MyDecompressorInputStream(new FileInputStream(parm[1] + ".maz"));
 			byte b[] = new byte[4096];
 			in.read(b);
 			loaded = new Maze3d(b);
@@ -243,11 +243,12 @@ public class MyModel extends CommonModel {
 				in.close();
 			} catch (IOException e) 
 			{
-				controller.setMessage("Maze "+ parm[1]+" was unsuccessfully");
+				controller.setMessage("Maze "+ parm[2]+" was unsuccessfully");
 			}
 		}
 			
-		hashMaze.put(parm[1], loaded);
+		hashMaze.put(parm[2], loaded);
+		mazeFile.put(loaded, parm[1] + ".maz");
 		controller.setMessage("Maze " + parm[2] + " loaded successfully");
 	}
 	
