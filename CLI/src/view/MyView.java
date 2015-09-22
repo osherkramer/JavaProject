@@ -27,7 +27,7 @@ public class MyView extends CommonView {
 
 	@Override
 	public void displayMessage(String message) {
-		System.out.println(message);
+		cli.setMessage(message);
 	}
 
 }

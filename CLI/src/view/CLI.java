@@ -69,4 +69,9 @@ public class CLI {
 			}
 		}).start();
 	}
+	
+	public void setMessage(String str){
+		out.println(str);
+		out.flush();
+	}
 }
