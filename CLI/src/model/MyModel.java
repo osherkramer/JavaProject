@@ -52,7 +52,6 @@ public class MyModel extends CommonModel {
 				Maze3d maze = new MyMaze3dGenerator().generate(x, y, z);
 				hashMaze.put(name,maze);
 				controller.setMessage("maze " + name + " is ready");
-				
 			}
 		});		
 	}

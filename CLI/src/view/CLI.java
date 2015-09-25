@@ -52,8 +52,8 @@ public class CLI {
 						try {
 							str = in.readLine();
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							out.println(e.getMessage());
+							out.flush();
 						}
 						String[] command = str.split(" ", 2);
 						com = hash.get(command[0]);
@@ -62,8 +62,10 @@ public class CLI {
 								com.doCommand("");
 							else	
 								com.doCommand(command[1]);
-						else
-							System.out.println("Error! Command not exist");
+						else{
+							out.println("Error! Command not exist");
+							out.flush();
+						}
 
 				}
 			}
