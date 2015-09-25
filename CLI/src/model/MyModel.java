@@ -74,32 +74,45 @@ public class MyModel extends CommonModel {
 			return;
 		}
 		
-		/////////////////////////////////////////////////////////////
 		threadpool.execute(new Runnable() {
 			
 			@Override
 			public void run() {
 				if(parm[1].equalsIgnoreCase("bfs")){
-					Maze3d maze = hashMaze.get(parm[0]); ////////
-					BFS<Position> bfs = new BFS<Position>();
-					Solution<Position> bfsSolution = bfs.search(new MazeDomain(maze));
-					hashSolution.put(parm[0], bfsSolution);
-					controller.setMessage("Solution for " + parm[0] + " is ready");
+					Maze3d maze = hashMaze.get(parm[0]);
+					if(maze != null){
+						BFS<Position> bfs = new BFS<Position>();
+						Solution<Position> bfsSolution = bfs.search(new MazeDomain(maze));
+						hashSolution.put(parm[0], bfsSolution);
+						controller.setMessage("Solution for " + parm[0] + " is ready");
+					}
+					else{
+						controller.setMessage("Invalid name");
+					}
 				}
 				else if(parm[1].equalsIgnoreCase("ManhattanDistance")){
-					Maze3d maze = hashMaze.get(parm[0]);/////////////
-					AStar<Position> astarManhattanDistance = new AStar<Position>(new MazeManhattanDistance(new State<Position>(maze.getGoalPosition())));
-					Solution<Position> astarManhattan = astarManhattanDistance.search(new MazeDomain(maze));
-					hashSolution.put(parm[0], astarManhattan);
-					controller.setMessage("Solution for " + parm[0] + " is ready");
-					
+					Maze3d maze = hashMaze.get(parm[0]);
+					if(maze != null){
+						AStar<Position> astarManhattanDistance = new AStar<Position>(new MazeManhattanDistance(new State<Position>(maze.getGoalPosition())));
+						Solution<Position> astarManhattan = astarManhattanDistance.search(new MazeDomain(maze));
+						hashSolution.put(parm[0], astarManhattan);
+						controller.setMessage("Solution for " + parm[0] + " is ready");
+					}
+					else{
+						controller.setMessage("Invalid name");
+					}
 				}
 				else if(parm[1].equalsIgnoreCase("AirDistance")){
-					Maze3d maze = hashMaze.get(parm[0]);/////////////////////
-					AStar<Position> astarAirDistance = new AStar<Position>(new MazeAirDistance(new State<Position>(maze.getGoalPosition())));
-					Solution<Position> astarAir = astarAirDistance.search(new MazeDomain(maze));
-					hashSolution.put(parm[0], astarAir);
-					controller.setMessage("Solution for " + parm[0] + " is ready");
+					Maze3d maze = hashMaze.get(parm[0]);
+					if(maze != null){
+						AStar<Position> astarAirDistance = new AStar<Position>(new MazeAirDistance(new State<Position>(maze.getGoalPosition())));
+						Solution<Position> astarAir = astarAirDistance.search(new MazeDomain(maze));
+						hashSolution.put(parm[0], astarAir);
+						controller.setMessage("Solution for " + parm[0] + " is ready");
+					}
+					else{
+						controller.setMessage("Invalid name");
+					}
 				}
 				else
 					controller.setMessage("Invalid algorithm");
@@ -213,21 +226,34 @@ public class MyModel extends CommonModel {
 	public void loadMaze(String arg) {
 		String[] parm = arg.split(" ");
 		Maze3d loaded = null;
+		boolean isOpen = false;
+		
 		if(parm.length != 3){
 			controller.setMessage("Invalid Command");
+			return;
+		}
+		try{
+			@SuppressWarnings("unused")
+			File file = new File(parm[1] + ".maz");
+		}
+		catch(NullPointerException e){
+			controller.setMessage("File not exist");
 			return;
 		}
 			
 		InputStream in=null;
 		try {
 			in = new MyDecompressorInputStream(new FileInputStream(parm[1] + ".maz"));
+			isOpen = true;
 			byte b[] = new byte[4096];
 			in.read(b);
 			loaded = new Maze3d(b);
-		} catch (FileNotFoundException e) {
+		}
+		catch (FileNotFoundException e) {
 			controller.setMessage(e.getMessage());
 			return;
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			controller.setMessage(e.getMessage());
 			return;
 		}
@@ -239,7 +265,8 @@ public class MyModel extends CommonModel {
 		finally
 		{
 			try {
-				in.close();
+				if(isOpen)
+					in.close();
 			} catch (IOException e) 
 			{
 				controller.setMessage("Maze "+ parm[2]+" was unsuccessfully");
